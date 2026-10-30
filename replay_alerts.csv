@@ -1,0 +1,11 @@
+timestamp,rule,level,technique,host,user,evidence,related_to_attack
+2026-08-18 09:31:58,Office Application Spawns Command Shell or Script Host,high,"T1204.002,T1059.003",WKS-FIN-014,qwhite,cmd.exe /c powershell.exe -nop -w hidden -enc SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABOAGUAdAAuAFcAZQBiAEMA,True
+2026-08-18 09:31:59,PowerShell Started With an Encoded Command,medium,T1059.001,WKS-FIN-014,qwhite,powershell.exe -nop -w hidden -enc SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB,True
+2026-08-18 09:33:20,Scheduled Task Created to Run a Script Interpreter,medium,T1053.005,WKS-FIN-014,qwhite,"schtasks.exe /create /tn ""OneDrive Sync Helper"" /tr ""powershell.exe -nop -w hidden -File C:\Users\Public\sync.",True
+2026-08-18 14:20:40,Domain Admins Group Enumeration With net,low,T1069.002,WKS-FIN-014,qwhite,"net group ""Domain Admins"" /domain",True
+2026-08-18 14:48:05,LSASS Memory Dump via comsvcs.dll,high,T1003.001,WKS-FIN-014,qwhite,"rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump 704 C:\Users\Public\l.dmp full",True
+2026-08-18 14:48:06,Suspicious Process Access to LSASS,high,T1003.001,WKS-FIN-014,qwhite,C:\Windows\System32\lsass.exe,True
+2026-08-18 15:10:32,Remote Desktop Logon by a Service Account,medium,"T1021.001,T1078",SRV-FILE-01,svc_backup,EventID 4624 LogonType 10,True
+2026-08-19 02:05:14,Remote Desktop Logon by a Service Account,medium,"T1021.001,T1078",SRV-FILE-01,svc_backup,EventID 4624 LogonType 10,True
+2026-08-19 02:58:20,Windows Event Log Cleared With wevtutil,high,T1070.001,SRV-FILE-01,svc_backup,wevtutil.exe cl Security,True
+2026-08-19 02:58:21,Windows Security Audit Log Cleared,high,T1070.001,SRV-FILE-01,svc_backup,EventID 1102 LogonType ,True

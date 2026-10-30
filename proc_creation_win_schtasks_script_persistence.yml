@@ -1,0 +1,34 @@
+title: Scheduled Task Created to Run a Script Interpreter
+id: 75ac3814-3086-538a-b670-4d8fc4596f4e
+status: experimental
+description: Detects schtasks.exe creating a task whose action starts PowerShell, a command shell, or another script host. A common way to keep access after a reboot.
+references:
+    - https://attack.mitre.org/techniques/T1053/005/
+author: mmanzanares7
+date: 2026/10/30
+tags:
+    - attack.persistence
+    - attack.execution
+    - attack.t1053.005
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: '\schtasks.exe'
+    selection_create:
+        CommandLine|contains: ' /create '
+    selection_action:
+        CommandLine|contains:
+            - 'powershell'
+            - 'pwsh'
+            - 'cmd.exe /c'
+            - 'mshta'
+            - 'wscript'
+            - 'cscript'
+            - 'rundll32'
+            - 'regsvr32'
+    condition: selection_img and selection_create and selection_action
+falsepositives:
+    - Administrators who schedule maintenance scripts with PowerShell
+level: medium

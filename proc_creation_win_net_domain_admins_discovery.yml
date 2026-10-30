@@ -1,0 +1,28 @@
+title: Domain Admins Group Enumeration With net
+id: e6b654c3-6183-5bf7-9018-d4ce1d75ecaa
+status: experimental
+description: Detects net or net1 listing the Domain Admins group. Attackers do this early to find the accounts worth stealing.
+references:
+    - https://attack.mitre.org/techniques/T1069/002/
+author: mmanzanares7
+date: 2026/10/30
+tags:
+    - attack.discovery
+    - attack.t1069.002
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\net.exe'
+            - '\net1.exe'
+    selection_cmd:
+        CommandLine|contains|all:
+            - 'group'
+            - 'domain admins'
+    condition: selection_img and selection_cmd
+falsepositives:
+    - Administrators checking group membership
+    - Audit scripts
+level: low

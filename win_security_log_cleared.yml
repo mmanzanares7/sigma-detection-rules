@@ -1,0 +1,21 @@
+title: Windows Security Audit Log Cleared
+id: e7ecaf65-a3e5-56aa-824e-0140ff7e6918
+status: experimental
+description: Detects Security event 1102, written when the audit log is cleared. This catches clearing by any method, not only wevtutil.
+references:
+    - https://attack.mitre.org/techniques/T1070/001/
+author: mmanzanares7
+date: 2026/10/30
+tags:
+    - attack.defense_evasion
+    - attack.t1070.001
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 1102
+    condition: selection
+falsepositives:
+    - Planned log maintenance by administrators
+level: high

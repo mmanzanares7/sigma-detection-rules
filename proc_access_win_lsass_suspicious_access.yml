@@ -1,0 +1,35 @@
+title: Suspicious Process Access to LSASS
+id: 8eac37e6-62e5-5ad9-8805-505da6e354bc
+status: experimental
+description: Detects a process opening lsass.exe with access rights that allow reading memory. Common system processes that do this are excluded.
+references:
+    - https://attack.mitre.org/techniques/T1003/001/
+author: mmanzanares7
+date: 2026/10/30
+tags:
+    - attack.credential_access
+    - attack.t1003.001
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: '\lsass.exe'
+        GrantedAccess:
+            - '0x1fffff'
+            - '0x1010'
+            - '0x1410'
+            - '0x1438'
+            - '0x143a'
+    filter_system:
+        SourceImage:
+            - 'C:\Windows\System32\wininit.exe'
+            - 'C:\Windows\System32\csrss.exe'
+            - 'C:\Windows\System32\svchost.exe'
+    filter_av:
+        SourceImage|endswith: '\MsMpEng.exe'
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Endpoint security tools that scan LSASS (add to the filter after verifying the signer)
+    - The MsMpEng filter is path-based and can be spoofed; require a trusted install path where possible
+level: high

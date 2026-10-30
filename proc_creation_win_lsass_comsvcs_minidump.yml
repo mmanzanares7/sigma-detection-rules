@@ -1,0 +1,25 @@
+title: LSASS Memory Dump via comsvcs.dll
+id: 0595605f-8b26-5a20-bd85-4ff3bb671afc
+status: experimental
+description: Detects rundll32 calling the MiniDump function in comsvcs.dll, a built-in way to write process memory (such as LSASS) to disk without extra tools.
+references:
+    - https://attack.mitre.org/techniques/T1003/001/
+author: mmanzanares7
+date: 2026/10/30
+tags:
+    - attack.credential_access
+    - attack.t1003.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_dll:
+        CommandLine|contains: 'comsvcs'
+    selection_fn:
+        CommandLine|contains:
+            - 'minidump'
+            - '#24'
+    condition: selection_dll and selection_fn
+falsepositives:
+    - Very rare. Troubleshooting by support staff who dump a process on purpose
+level: high

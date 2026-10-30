@@ -1,0 +1,31 @@
+title: PowerShell Started With an Encoded Command
+id: 2615631a-6e15-5887-bfab-9b8b515356fd
+status: experimental
+description: Detects PowerShell launched with an encoded command argument. Attackers use encoding to hide what runs. Software distribution tools can do this legitimately, so the parent process is excluded.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+author: mmanzanares7
+date: 2026/10/30
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+    selection_flag:
+        CommandLine|contains:
+            - ' -enc '
+            - ' -encodedcommand '
+            - ' -ec '
+    filter_sccm:
+        ParentImage|endswith: '\CcmExec.exe'
+    condition: selection_img and selection_flag and not filter_sccm
+falsepositives:
+    - Endpoint management agents that pass encoded commands (excluded by the parent filter; confirm in your environment)
+    - Some installers and monitoring tools
+level: medium

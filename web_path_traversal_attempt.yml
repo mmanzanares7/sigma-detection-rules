@@ -1,0 +1,24 @@
+title: Path Traversal Attempt in Web Request
+id: 774575ed-da78-51e7-b644-8fd6f23131a5
+status: experimental
+description: Detects directory traversal sequences, plain or URL-encoded, in a requested URI. Used to read files outside the web root.
+references:
+    - https://attack.mitre.org/techniques/T1190/
+author: mmanzanares7
+date: 2026/10/30
+tags:
+    - attack.initial_access
+    - attack.t1190
+logsource:
+    category: webserver
+detection:
+    selection:
+        c-uri|contains:
+            - '../'
+            - '..\\'
+            - '%2e%2e%2f'
+            - '..%2f'
+    condition: selection
+falsepositives:
+    - Broken relative links in legacy applications
+level: medium

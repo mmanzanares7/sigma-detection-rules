@@ -1,0 +1,13 @@
+rule,technique,level,events_checked,alerts,related_to_attack,unrelated,note
+proc_access_win_lsass_suspicious_access,T1003.001,high,1,1,1,0,
+proc_creation_win_certutil_download,T1105,medium,2278,0,0,0,
+proc_creation_win_lsass_comsvcs_minidump,T1003.001,high,2278,1,1,0,
+proc_creation_win_net_domain_admins_discovery,T1069.002,low,2278,1,1,0,
+proc_creation_win_office_spawn_shell,"T1204.002,T1059.003",high,2278,1,1,0,
+proc_creation_win_powershell_encoded_command,T1059.001,medium,2278,1,1,0,
+proc_creation_win_schtasks_script_persistence,T1053.005,medium,2278,1,1,0,
+proc_creation_win_vssadmin_shadow_delete,T1490,high,2278,0,0,0,
+proc_creation_win_wevtutil_clear_logs,T1070.001,high,2278,1,1,0,
+web_path_traversal_attempt,T1190,medium,0,0,0,0,No matching log source in the replay data
+win_security_log_cleared,T1070.001,high,598,1,1,0,
+win_security_rdp_logon_service_account,"T1021.001,T1078",medium,598,2,2,0,

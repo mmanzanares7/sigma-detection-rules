@@ -1,0 +1,25 @@
+title: Windows Event Log Cleared With wevtutil
+id: d535bec9-3d84-57b7-8e23-9c1a18ac9cae
+status: experimental
+description: Detects wevtutil used to clear an event log. Attackers clear logs to remove evidence of their activity.
+references:
+    - https://attack.mitre.org/techniques/T1070/001/
+author: mmanzanares7
+date: 2026/10/30
+tags:
+    - attack.defense_evasion
+    - attack.t1070.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: '\wevtutil.exe'
+    selection_cmd:
+        CommandLine|contains:
+            - ' cl '
+            - ' clear-log '
+    condition: selection_img and selection_cmd
+falsepositives:
+    - Administrators who clear logs during lab rebuilds or after a log retention change
+level: high
